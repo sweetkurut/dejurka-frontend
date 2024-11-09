@@ -5,18 +5,20 @@ import RealEstatePage from "./pages/realEstate";
 import SalesPage from "./pages/sales";
 import UsersPage from "./pages/users";
 import ProfilePage from "./pages/profile";
+import Layout from "./common/layout/Layout";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<SalesPage/>} />
-        <Route path="/login" element={<LoginPage/>} />
-        <Route path="/real-estate" element={<RealEstatePage/>} />
-        <Route path="/users" element={<UsersPage/>} />
-        <Route path="/profile" element={<ProfilePage/>} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<Layout />}>
+          <Route path="/sales" element={<SalesPage />} />
+          <Route path="/real-estate" element={<RealEstatePage />} />
+          <Route path="/users" element={<UsersPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+        </Route>
       </Routes>
-      
     </BrowserRouter>
   );
 }

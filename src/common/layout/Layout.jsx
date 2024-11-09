@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react";
+import Header from "../components/Header/Header";
+import Sidebar from "../components/Sidebar/Sidebar";
 
 const Layout = () => {
-  return (
-    <div>Layout</div>
-  )
-}
+  return <Sidebar />;
+};
 
-export default Layout
+export default Layout;
