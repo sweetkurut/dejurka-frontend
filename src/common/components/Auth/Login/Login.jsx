@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   TextField,
   Container,
@@ -15,6 +15,8 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 import styles from "./login.module.scss";
 import { useNavigate } from "react-router-dom";
+import * as THREE from "three";
+import NET from "vanta/dist/vanta.net.min";
 
 const theme = createTheme({
   typography: {
@@ -32,9 +34,33 @@ export default function Login() {
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
+  const [vantaEffect, setVantaEffect] = useState(null);
+  const vantaRef = useRef(null);
+
   const navigate = useNavigate();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  useEffect(() => {
+    if (!vantaEffect) {
+      setVantaEffect(
+        NET({
+          el: vantaRef.current,
+          THREE,
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.0,
+          minWidth: 200.0,
+          scale: 1.0,
+          scaleMobile: 1.0,
+        })
+      );
+    }
+    return () => {
+      if (vantaEffect) vantaEffect.destroy();
+    };
+  }, [vantaEffect]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,7 +91,7 @@ export default function Login() {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className={styles.banner}>
+      <div className={styles.banner} ref={vantaRef}>
         <Container component="main" maxWidth="md" className={styles.container}>
           <form className={styles.form} onSubmit={formSubmit}>
             <h2 className={styles.title}>Авторизация</h2>
@@ -169,13 +195,6 @@ export default function Login() {
               {snackbarMessage}
             </Alert>
           </Snackbar>
-
-          <div className={styles.companyInfo}>
-            <div className={styles.email_company}>
-              <p>Разработано с Укиев Айдин Талантович</p>
-              <p>+996(552)-22-07-90</p>
-            </div>
-          </div>
         </Container>
       </div>
     </ThemeProvider>

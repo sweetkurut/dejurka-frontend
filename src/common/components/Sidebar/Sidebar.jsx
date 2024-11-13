@@ -9,14 +9,10 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 // import candyLogo from "../../assets/images/candy_logo.jpg";
 
 const NAVIGATION = [
-  // {
-  //   kind: "header",
-  //   title: "Продукты",
-  // },
-
   {
     segment: "real-estate",
     title: "Недвижимость",
@@ -27,7 +23,6 @@ const NAVIGATION = [
     title: "Продажи",
     icon: <ShoppingCartOutlinedIcon />,
   },
-
   {
     segment: "users",
     title: "Пользователи",
@@ -37,6 +32,11 @@ const NAVIGATION = [
     segment: "profile",
     title: "Профиль",
     icon: <AccountCircleOutlinedIcon />,
+  },
+  {
+    segment: "about-company",
+    title: "О нас",
+    icon: <InfoOutlinedIcon />,
   },
 ];
 
@@ -75,53 +75,6 @@ function Sidebar({ children, window }) {
 
   const demoWindow = window !== undefined ? window() : undefined;
 
-  const [session, setSession] = useState({
-    user: {
-      name: "Укиев Айдин",
-      email: "sweetkurut@gmail.com",
-      image:
-        "https://e7.pngegg.com/pngimages/550/997/png-clipart-user-icon-foreigners-avatar-child-face.png",
-    },
-  });
-  const authentication = useMemo(() => {
-    return {
-      signIn: () => {
-        setSession({
-          user: {
-            name: "Укиев Айдин",
-            email: "sweetkurut@gmail.com",
-            image:
-              "https://e7.pngegg.com/pngimages/550/997/png-clipart-user-icon-foreigners-avatar-child-face.png",
-          },
-        });
-      },
-      signOut: () => {
-        setSession(null);
-        navigate("/login");
-      },
-    };
-  }, [navigate]);
-
-  const handleNavigation = (segment, parentSegment) => {
-    if (segment === "logout") {
-      authentication.signOut();
-    } else if (segment === "profile") {
-      authentication.goToProfile();
-    } else if (segment === "settings") {
-      authentication.goToSettings();
-    } else {
-      if (parentSegment) {
-        navigate(`/${parentSegment}/${segment}`);
-      } else {
-        navigate(`/${segment}`);
-      }
-    }
-  };
-
-  const handleLogoClick = () => {
-    navigate("/catalog");
-  };
-
   return (
     <AppProvider
       navigation={NAVIGATION}
@@ -146,13 +99,11 @@ function Sidebar({ children, window }) {
       router={router}
       theme={demoTheme}
       window={demoWindow}
-      session={session}
-      authentication={authentication}
       sx={{
         fontFamily: "Montserrat",
       }}
     >
-      <DashboardLayout onNavigation={handleNavigation}>
+      <DashboardLayout>
         <Box sx={{ width: "96%", height: "100%", fontFamily: "Montserrat" }}>
           {children}
           <Outlet />
