@@ -1,3 +1,4 @@
+import SearchComponent from "../../shared/Search/Serach";
 import AddEstates from "./AddEstates";
 import Cards from "./Cards/Cards";
 import styles from "./styles.module.scss";
@@ -8,7 +9,10 @@ const ReaslEstate = () => {
 
   return (
     <div className={styles.wrapper}>
-      <AddEstates />
+      <div className={styles.wrapper_addStates}>
+        <AddEstates />
+        <SearchComponent />
+      </div>
       {/* <h2>Страница недвижимостей</h2> */}
       <div className={styles.container}>
         <Cards />

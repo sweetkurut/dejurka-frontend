@@ -1,78 +1,22 @@
-.cards {
-  margin-top: 40px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  transition: .6s all;
-
-
-
-  @media (max-width: 1200px) {
-    grid-template-columns: repeat(3, 1fr); // 3 колонки на средних экранах
+.wrapper {
+  margin-top: 20px;
+  // padding: 20px;
+  margin: 20px;
+  .table {
+    width: 100%;
+    border-radius: 20px !important;
   }
 
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr); // 2 колонки на планшетах
-  }
-
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr; // 1 колонка на телефонах
-  }
-
-  .card {
-    border: solid 1px #ccc;
-    // padding: 14px;
-    border-radius: 10px;
-    
-   
-
-    .card_img {
-      width: 350px;
-      height: 300px;
-      object-fit: cover;
-      // border-bottom-left-radius:  20px;
-      // border-bottom-right-radius: 20px;
-      border-radius: 10px;
-    }
-
-    .card__content {
-      padding: 10px;
-
-
-      .label {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 5px;
-        // margin-bottom: 5px;
-      }
-
-      .btn_card {
-        padding: 10px 20px;
-        width: 100%;
-        margin-top: 40px;
-        background: transparent;
-        border-radius: 10px;
-        border: none;
-        border: solid 1px #ccc;
-        cursor: pointer;
-        font-family: Montserrat;
-        font-weight: 500;
-        font-size: 16px;
-        transition: .5s all;
-
-        &:hover {
-          background: #003161;
-          color: #fff;
-        }
-      }
+  .iconButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: 0 5px;
+    color: #3f51b5;
+    transition: color 0.3s;
+  
+    &:hover {
+      color: #f50057;
     }
   }
 }
-
-
-// .cards:hover> :not(:hover) {
-//   filter: blur(2px);
-//   transition: .4s ease;
-//   opacity: 0.6;
-// }
