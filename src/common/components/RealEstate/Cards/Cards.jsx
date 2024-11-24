@@ -15,16 +15,20 @@ import {
   DialogContent,
   IconButton,
   Tooltip,
+  Modal,
+  Box,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "./cards.module.scss";
 import { Edit, Delete } from "@mui/icons-material";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
+import dayjs from "dayjs";
 
 const Cards = () => {
   const { data: estates, error, isLoading } = useGetRealEstatesQuery();
   const [open, setOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState();
+  const [openDialog, setOpenDialog] = useState(false);
 
   const handleImageClick = (image) => {
     setSelectedImage(image);
@@ -34,6 +38,17 @@ const Cards = () => {
   const handleClose = () => {
     setOpen(false);
     setSelectedImage(null);
+  };
+
+  const handleDeleteConfirm = () => {
+    // Логика удаления недвижимости
+    console.log(`Удаление недвижимости с ID: ${selectedEstateId}`);
+    setOpenDeleteDialog(false); // Закрываем модальное окно
+  };
+
+  const handleDeleteClick = () => {
+    // setUserToDelete(supplierId);
+    setOpenDialog(true);
   };
 
   if (error) {
@@ -61,6 +76,7 @@ const Cards = () => {
           <TableHead>
             <TableRow>
               <TableCell>№</TableCell>
+              <TableCell>Дата</TableCell>
               <TableCell>Фото</TableCell>
               <TableCell>Название ЖК</TableCell>
               <TableCell>Описание</TableCell>
@@ -74,6 +90,9 @@ const Cards = () => {
             {estates?.map((estate, index) => (
               <TableRow key={estate.id}>
                 <TableCell>{index + 1}</TableCell>
+                <TableCell>
+                  {dayjs(estate.created_at).format("DD.MM.YYYY")}
+                </TableCell>
                 <TableCell>
                   <Avatar
                     alt="Недвижка"
@@ -99,7 +118,7 @@ const Cards = () => {
                   </Tooltip>
                   <Tooltip title="Удалить">
                     <button className={styles.iconButton}>
-                      <Delete />
+                      <Delete onClick={() => handleDeleteClick()} />
                     </button>
                   </Tooltip>
                   <Tooltip title="Подробнее">
@@ -113,6 +132,33 @@ const Cards = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Modal
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        aria-labelledby="delete-product-modal-title"
+        aria-describedby="delete-product-modal-description"
+      >
+        <Box className={styles.modal}>
+          <h4 className={styles.modal_title}>Вы точно хотите удалить?</h4>
+          <div className={styles.modalActions}>
+            <div className={styles.btn_wrapper}>
+              <button
+                onClick={handleDeleteConfirm}
+                className={styles.delete_btn}
+              >
+                Удалить
+              </button>
+              <button
+                onClick={() => setOpenDialog(false)}
+                className={styles.cancel_btn}
+              >
+                Отмена
+              </button>
+            </div>
+          </div>
+        </Box>
+      </Modal>
 
       <Dialog open={open} onClose={handleClose} maxWidth="md">
         <IconButton

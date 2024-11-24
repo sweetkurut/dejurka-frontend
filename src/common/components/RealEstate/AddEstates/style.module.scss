@@ -44,16 +44,15 @@
       border: none;
       border-radius: 10px;
       background: transparent;
+      background: #003161;
       border: solid 1px #000;
       font-size: 16px;
       cursor: pointer;
       font-family: 'Montserrat';
       transition: .5s all;
+      color: #fff;
 
-      &:hover {
-        background: #003161;
-        color: #fff;
-      }
+   
     }
   }
 }
