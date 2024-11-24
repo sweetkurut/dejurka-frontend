@@ -10,7 +10,7 @@ import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-// import candyLogo from "../../assets/images/candy_logo.jpg";
+// import candyLogo from "../../assets/img/";
 
 const NAVIGATION = [
   {
@@ -81,20 +81,21 @@ function Sidebar({ children, window }) {
       branding={{
         title: "Baytik-недвижимость",
         fontFamily: "Montserrat",
-        // logo: (
-        //   <img
-        //     src={candyLogo}
-        //     alt="Candy Logo"
-        //     style={{
-        //       cursor: "pointer",
-        //       color: "white",
-        //       borderRadius: "50%",
-        //       background: "#000",
-        //       objectFit: "cover",
-        //     }}
-        //     onClick={handleLogoClick}
-        //   />
-        // ),
+        logo: (
+          <img
+            src={
+              "https://dynamic.brandcrowd.com/asset/logo/05406af8-ee93-44de-990b-33a07d6b6569/logo-search-grid-2x?logoTemplateVersion=1&v=638442743264500000"
+            }
+            alt="Candy Logo"
+            style={{
+              cursor: "pointer",
+              color: "white",
+              borderRadius: "50%",
+              background: "#000",
+              objectFit: "cover",
+            }}
+          />
+        ),
       }}
       router={router}
       theme={demoTheme}

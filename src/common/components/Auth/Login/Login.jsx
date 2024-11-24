@@ -12,11 +12,12 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-
-import styles from "./login.module.scss";
 import { useNavigate } from "react-router-dom";
 import * as THREE from "three";
 import NET from "vanta/dist/vanta.net.min";
+
+import styles from "./login.module.scss";
+import { useAuthUserMutation } from "../../../../store/services/AuthApi";
 
 const theme = createTheme({
   typography: {
@@ -26,7 +27,7 @@ const theme = createTheme({
 
 export default function Login() {
   const [formData, setFormData] = useState({
-    login: "",
+    username: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -38,6 +39,7 @@ export default function Login() {
   const vantaRef = useRef(null);
 
   const navigate = useNavigate();
+  const [authUser, { isLoading, error }] = useAuthUserMutation();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -74,20 +76,42 @@ export default function Login() {
     setOpenSnackbar(false);
   };
 
-  const formSubmit = (e) => {
+  const formSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.login || !formData.password) {
+    if (!formData.username || !formData.password) {
       setSnackbarMessage("Заполните поля");
       setSnackbarSeverity("error");
       setOpenSnackbar(true);
       return;
     }
 
-    setSnackbarMessage("Успешно вошли!");
-    setSnackbarSeverity("success");
-    setOpenSnackbar(true);
+    try {
+      const data = await authUser(formData).unwrap();
+      const token = data.access_token;
+      localStorage.setItem("accessToken", token);
+      setSnackbarMessage("Успешно вошли!");
+      setSnackbarSeverity("success");
+      setOpenSnackbar(true);
+
+      if (data.access_token) {
+        navigate("/sales");
+      }
+    } catch (err) {
+      const errorMessage =
+        err?.data?.message || "Ошибка входа. Проверьте данные.";
+      setSnackbarMessage(errorMessage);
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+    }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      navigate("/login");
+    }
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -99,12 +123,12 @@ export default function Login() {
               margin="normal"
               required
               fullWidth
-              id="login"
+              id="username"
               label="Логин"
-              name="login"
-              autoComplete="login"
+              name="username"
+              autoComplete="username"
               autoFocus
-              value={formData.login}
+              value={formData.username}
               onChange={handleChange}
               placeholder="Введите логин"
               className={styles.input}
@@ -175,9 +199,9 @@ export default function Login() {
             <button
               type="submit"
               className={styles.btn}
-              onClick={() => navigate("/sales")}
+              disabled={isLoading} // Кнопка заблокирована при загрузке
             >
-              Войти
+              {isLoading ? "Загрузка..." : "Войти"}
             </button>
           </form>
 
