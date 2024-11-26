@@ -23,6 +23,7 @@ import styles from "./cards.module.scss";
 import { Edit, Delete } from "@mui/icons-material";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import dayjs from "dayjs";
+import Loader from "../../../Ui/Loader/Loader";
 
 const Cards = () => {
   const { data: estates, error, isLoading } = useGetRealEstatesQuery();
@@ -64,14 +65,22 @@ const Cards = () => {
   if (isLoading) {
     return (
       <div className={styles.loader}>
-        <CircularProgress />
+        <Loader />
       </div>
     );
   }
 
   return (
     <>
-      <TableContainer component={Paper} className={styles.wrapper}>
+      <TableContainer
+        component={Paper}
+        className={styles.wrapper}
+        sx={{
+          borderRadius: "14px !important",
+          // padding: "10px",
+          border: "1px solid #f8f8f8",
+        }}
+      >
         <Table className={styles.table}>
           <TableHead>
             <TableRow>

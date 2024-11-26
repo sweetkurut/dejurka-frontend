@@ -8,6 +8,7 @@ import ProfilePage from "./pages/profile";
 import Layout from "./common/layout/Layout";
 import AboutPage from "./pages/about";
 import ProtectedRoute from "./common/components/ProtectedRoute";
+import RealEstateDetailPage from "./pages/realEstateDetail";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           {/* <Route element={ProtectedRoute}> */}
           <Route path="/sales" element={<SalesPage />} />
           <Route path="/real-estate" element={<RealEstatePage />} />
+          <Route path="/real-estate/:id" element={<RealEstateDetailPage />} />
           <Route path="/users" element={<UsersPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/about-company" element={<AboutPage />} />
