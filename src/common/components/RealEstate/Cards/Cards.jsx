@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { useGetRealEstatesQuery } from "../../../../store/services/RealEstateApi";
+import {
+  useDeleteRealEstateMutation,
+  useGetRealEstatesQuery,
+} from "../../../../store/services/RealEstateApi";
 import {
   Table,
   TableBody,
@@ -17,6 +20,8 @@ import {
   Tooltip,
   Modal,
   Box,
+  Snackbar,
+  Alert, // Добавляем Snackbar
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "./cards.module.scss";
@@ -24,12 +29,29 @@ import { Edit, Delete } from "@mui/icons-material";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import dayjs from "dayjs";
 import Loader from "../../../Ui/Loader/Loader";
+import { useNavigate } from "react-router-dom";
 
 const Cards = () => {
-  const { data: estates, error, isLoading } = useGetRealEstatesQuery();
+  const { data: estates, error, isLoading, refetch } = useGetRealEstatesQuery();
+  const [deleteRealEstate] = useDeleteRealEstateMutation();
   const [open, setOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState();
   const [openDialog, setOpenDialog] = useState(false);
+  const [selectedEstateId, setSelectedEstateId] = useState(null);
+  const [openSnackbar, setOpenSnackbar] = useState(false); // Состояние для Snackbar
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const navigate = useNavigate();
+
+  const showSnackbar = (message, severity) => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setOpenSnackbar(true);
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
 
   const handleImageClick = (image) => {
     setSelectedImage(image);
@@ -41,15 +63,30 @@ const Cards = () => {
     setSelectedImage(null);
   };
 
-  const handleDeleteConfirm = () => {
-    // Логика удаления недвижимости
-    console.log(`Удаление недвижимости с ID: ${selectedEstateId}`);
-    setOpenDeleteDialog(false); // Закрываем модальное окно
+  const handleDeleteClick = (id) => {
+    setSelectedEstateId(id);
+    setOpenDialog(true);
   };
 
-  const handleDeleteClick = () => {
-    // setUserToDelete(supplierId);
-    setOpenDialog(true);
+  const handleDeleteConfirm = async () => {
+    if (selectedEstateId) {
+      try {
+        await deleteRealEstate(selectedEstateId).unwrap();
+        console.log(`Недвижимость с ID ${selectedEstateId} удалена.`);
+        showSnackbar("Недвижимость удалена успешно!", "success");
+        refetch();
+      } catch (err) {
+        console.error("Ошибка при удалении недвижимости:", err);
+        showSnackbar("Ошибка при удалении недвижимости!", "error"); // Показать Snackbar при ошибке
+      } finally {
+        setOpenDialog(false);
+        setSelectedEstateId(null);
+      }
+    }
+  };
+
+  const handleNavigate = (id) => {
+    navigate(`/real-estate/${id}`);
   };
 
   if (error) {
@@ -77,7 +114,6 @@ const Cards = () => {
         className={styles.wrapper}
         sx={{
           borderRadius: "14px !important",
-          // padding: "10px",
           border: "1px solid #f8f8f8",
         }}
       >
@@ -96,48 +132,55 @@ const Cards = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {estates?.map((estate, index) => (
-              <TableRow key={estate.id}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>
-                  {dayjs(estate.created_at).format("DD.MM.YYYY")}
-                </TableCell>
-                <TableCell>
-                  <Avatar
-                    alt="Недвижка"
-                    src="https://ned.kg//storage/12839/63722748b4d5b_F65B61C5-E333-4C35-8A17-8648DA0E73E5-1.jpeg"
-                    onClick={() =>
-                      handleImageClick(
-                        "https://ned.kg//storage/12839/63722748b4d5b_F65B61C5-E333-4C35-8A17-8648DA0E73E5-1.jpeg"
-                      )
-                    }
-                    style={{ cursor: "pointer" }}
-                  />
-                </TableCell>
-                <TableCell>{estate.residentialComplexName}</TableCell>
-                <TableCell>{estate.description}</TableCell>
-                <TableCell>{estate.exactAddress}</TableCell>
-                <TableCell>{estate.buildingCompanyName}</TableCell>
-                <TableCell>{estate.priceVisible}</TableCell>
-                <TableCell>
-                  <Tooltip title="Редактирование">
-                    <button className={styles.iconButton}>
-                      <Edit />
-                    </button>
-                  </Tooltip>
-                  <Tooltip title="Удалить">
-                    <button className={styles.iconButton}>
-                      <Delete onClick={() => handleDeleteClick()} />
-                    </button>
-                  </Tooltip>
-                  <Tooltip title="Подробнее">
-                    <button className={styles.iconButton}>
-                      <ArrowForwardOutlinedIcon />
-                    </button>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-            ))}
+            {Array.isArray(estates) &&
+              estates.map((estate, index) => (
+                <TableRow key={estate.id}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>
+                    {dayjs(estate.created_at).format("DD.MM.YYYY")}
+                  </TableCell>
+                  <TableCell>
+                    <Avatar
+                      alt="Недвижка"
+                      src="https://ned.kg//storage/12839/63722748b4d5b_F65B61C5-E333-4C35-8A17-8648DA0E73E5-1.jpeg"
+                      onClick={() =>
+                        handleImageClick(
+                          "https://ned.kg//storage/12839/63722748b4d5b_F65B61C5-E333-4C35-8A17-8648DA0E73E5-1.jpeg"
+                        )
+                      }
+                      style={{ cursor: "pointer" }}
+                    />
+                  </TableCell>
+                  <TableCell>{estate.residentialComplexName}</TableCell>
+                  <TableCell>{estate.description}</TableCell>
+                  <TableCell>{estate.exactAddress}</TableCell>
+                  <TableCell>{estate.buildingCompanyName}</TableCell>
+                  <TableCell>{estate.priceVisible}</TableCell>
+                  <TableCell>
+                    <Tooltip title="Редактирование">
+                      <button className={styles.iconButton}>
+                        <Edit />
+                      </button>
+                    </Tooltip>
+                    <Tooltip title="Удалить">
+                      <button
+                        className={styles.iconButton}
+                        onClick={() => handleDeleteClick(estate.id)}
+                      >
+                        <Delete />
+                      </button>
+                    </Tooltip>
+                    <Tooltip title="Подробнее">
+                      <button
+                        className={styles.iconButton}
+                        onClick={() => handleNavigate(estate.id)}
+                      >
+                        <ArrowForwardOutlinedIcon />
+                      </button>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -186,6 +229,21 @@ const Cards = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

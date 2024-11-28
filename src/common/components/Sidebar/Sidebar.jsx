@@ -79,7 +79,7 @@ function Sidebar({ children, window }) {
     <AppProvider
       navigation={NAVIGATION}
       branding={{
-        title: "Baytik-недвижимость",
+        title: "Дежурка",
         fontFamily: "Montserrat",
         logo: (
           <img

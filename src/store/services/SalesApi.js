@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const realEstateApi = createApi({
-  reducerPath: "realEstateApi",
+export const salesApi = createApi({
+  reducerPath: "salesApi",
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_URL,
     prepareHeaders: (headers) => {
@@ -14,21 +14,21 @@ export const realEstateApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getRealEstates: builder.query({
-      query: () => "real-estate",
+    getSales: builder.query({
+      query: () => "sales",
     }),
 
-    deleteRealEstate: builder.mutation({
+    deleteSales: builder.mutation({
       query: (id) => ({
-        url: `real-estate/${id}`,
+        url: `sales/${id}`,
         method: "DELETE",
       }),
     }),
 
-    getRealEstateDetail: builder.query({
-      query: (id) => `real-estate/${id}`,
+    getSalesDetail: builder.query({
+      query: (id) => `sales/${id}`,
     }),
   }),
 });
 
-export const { useGetRealEstatesQuery, useDeleteRealEstateMutation, useGetRealEstateDetailQuery } = realEstateApi;
+export const { useGetSalesQuery, useDeleteSalesMutation, useGetSalesDetailQuery } = salesApi;
