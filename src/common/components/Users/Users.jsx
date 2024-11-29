@@ -1,9 +1,12 @@
-import styles from './styles.module.scss'
+import TableUsers from "./components/tableUser/TableUser";
+import styles from "./styles.module.scss";
 
 const Users = () => {
   return (
-    <div className={styles.wrapper}>Страница пользователей</div>
-  )
-}
+    <div className={styles.wrapper}>
+      <TableUsers />
+    </div>
+  );
+};
 
-export default Users
+export default Users;

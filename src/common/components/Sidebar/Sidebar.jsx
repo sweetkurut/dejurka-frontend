@@ -10,7 +10,7 @@ import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-// import candyLogo from "../../assets/img/";
+import candyLogo from "../../assets/img/logo.jpg";
 
 const NAVIGATION = [
   {
@@ -83,10 +83,8 @@ function Sidebar({ children, window }) {
         fontFamily: "Montserrat",
         logo: (
           <img
-            src={
-              "https://dynamic.brandcrowd.com/asset/logo/05406af8-ee93-44de-990b-33a07d6b6569/logo-search-grid-2x?logoTemplateVersion=1&v=638442743264500000"
-            }
-            alt="Candy Logo"
+            src={candyLogo}
+            alt="Baytik Logo"
             style={{
               cursor: "pointer",
               color: "white",

@@ -1,9 +1,12 @@
-import styles from './styles.module.scss'
+import TableSales from "./components/TableSales/Table";
+import styles from "./styles.module.scss";
 
 const Sales = () => {
   return (
-    <div className={styles.wrapper}><p>Страница продаж</p></div>
-  )
-}
+    <div className={styles.wrapper}>
+      <TableSales />
+    </div>
+  );
+};
 
-export default Sales
+export default Sales;

@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const salesApi = createApi({
-  reducerPath: "salesApi",
+export const userApi = createApi({
+  reducerPath: "userApi",
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_URL,
     prepareHeaders: (headers) => {
@@ -16,28 +16,29 @@ export const salesApi = createApi({
 
 
   endpoints: (builder) => ({
-    getSales: builder.query({
-      query: () => "sales",
+  
+    getUsers: builder.query({
+      query: () => "users",
     }),
 
-    deleteSales: builder.mutation({
+    deleteUsers: builder.mutation({
       query: (id) => ({
-        url: `sales/${id}`,
+        url: `users/${id}`,
         method: "DELETE",
       }),
     }),
 
-    getSalesDetail: builder.query({
-      query: (id) => `sales/${id}`,
+    getUsersDetail: builder.query({
+      query: (id) => `users/${id}`,
     }),
 
 
-    createSales: builder.mutation({
+    createUser: builder.mutation({
       query: (data) => {
         // Лог для проверки данных перед запросом
         console.log("Отправка данных для продажи:", data);
         return {
-          url: "sales",
+          url: "users",
           method: "POST",
           body: data,
         };
@@ -47,4 +48,4 @@ export const salesApi = createApi({
   }),
 });
 
-export const { useGetSalesQuery, useDeleteSalesMutation, useGetSalesDetailQuery, useCreateSalesMutation } = salesApi;
+export const { useCreateUserMutation, useGetUsersDetailQuery, useGetUsersQuery, useDeleteUsersMutation } = userApi;

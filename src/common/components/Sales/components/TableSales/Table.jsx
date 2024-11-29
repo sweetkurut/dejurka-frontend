@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-import {
-  useDeleteRealEstateMutation,
-  useGetRealEstatesQuery,
-} from "../../../../store/services/RealEstateApi";
+
 import {
   Table,
   TableBody,
@@ -24,16 +21,21 @@ import {
   Alert, // Добавляем Snackbar
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import styles from "./cards.module.scss";
+import styles from "./table.module.scss";
 import { Edit, Delete } from "@mui/icons-material";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import dayjs from "dayjs";
-import Loader from "../../../Ui/Loader/Loader";
 import { useNavigate } from "react-router-dom";
+import {
+  useDeleteSalesMutation,
+  useGetSalesQuery,
+} from "../../../../../store/services/SalesApi";
+import Loader from "../../../../Ui/Loader/Loader";
+import BookmarkAddedOutlinedIcon from "@mui/icons-material/BookmarkAddedOutlined";
 
-const Cards = () => {
-  const { data: estates, error, isLoading, refetch } = useGetRealEstatesQuery();
-  const [deleteRealEstate] = useDeleteRealEstateMutation();
+const TableSales = () => {
+  const { data: sales, error, isLoading, refetch } = useGetSalesQuery();
+  const [deleteSales] = useDeleteSalesMutation();
   const [open, setOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState();
   const [openDialog, setOpenDialog] = useState(false);
@@ -71,13 +73,13 @@ const Cards = () => {
   const handleDeleteConfirm = async () => {
     if (selectedEstateId) {
       try {
-        await deleteRealEstate(selectedEstateId).unwrap();
-        console.log(`Недвижимость с ID ${selectedEstateId} удалена.`);
+        await deleteSales(selectedEstateId).unwrap();
+        console.log(`продажа с ID ${selectedEstateId} удалена.`);
         showSnackbar("Недвижимость удалена успешно!", "success");
         refetch();
       } catch (err) {
         console.error("Ошибка при удалении недвижимости:", err);
-        showSnackbar("Ошибка при удалении недвижимости!", "error"); // Показать Snackbar при ошибке
+        showSnackbar("Ошибка при удалении недвижимости!", "error");
       } finally {
         setOpenDialog(false);
         setSelectedEstateId(null);
@@ -121,35 +123,25 @@ const Cards = () => {
           <TableHead>
             <TableRow>
               <TableCell>№</TableCell>
-              <TableCell>Дата</TableCell>
+              <TableCell>Дата продажи</TableCell>
               <TableCell>Фото</TableCell>
               <TableCell>Название ЖК</TableCell>
               <TableCell>Описание</TableCell>
               <TableCell>Адрес</TableCell>
               <TableCell>Строительная компания</TableCell>
               <TableCell>Цена</TableCell>
-              <TableCell
-                sx={{
-                  // display: "flex",
-                  // justifyContent: "center",
-                  // alignItems: "center",
-                  // gap: "10px",
-                  // textAlign: "center",
-                  paddingLeft: "40px !important",
-                  // bgcolor: "black",
-                }}
-              >
-                Действия
-              </TableCell>
+              <TableCell>Продавец</TableCell>
+              <TableCell>Роль</TableCell>
+              <TableCell>Действия</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {Array.isArray(estates) &&
-              estates.map((estate, index) => (
+            {Array.isArray(sales) &&
+              sales.map((estate, index) => (
                 <TableRow key={estate.id}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>
-                    {dayjs(estate.created_at).format("DD.MM.YYYY")}
+                    {dayjs(estate.saleDate).format("DD.MM.YYYY")}
                   </TableCell>
                   <TableCell>
                     <Avatar
@@ -163,11 +155,15 @@ const Cards = () => {
                       style={{ cursor: "pointer" }}
                     />
                   </TableCell>
-                  <TableCell>{estate.residentialComplexName}</TableCell>
-                  <TableCell>{estate.description}</TableCell>
-                  <TableCell>{estate.exactAddress}</TableCell>
-                  <TableCell>{estate.buildingCompanyName}</TableCell>
-                  <TableCell>{estate.priceVisible}</TableCell>
+                  <TableCell>
+                    {estate.realEstate.residentialComplexName}
+                  </TableCell>
+                  <TableCell>{estate.realEstate.description}</TableCell>
+                  <TableCell>{estate.realEstate.exactAddress}</TableCell>
+                  <TableCell>{estate.realEstate.buildingCompanyName}</TableCell>
+                  <TableCell>{estate.realEstate.priceVisible}</TableCell>
+                  <TableCell>{estate.user.fullName}</TableCell>
+                  <TableCell>{estate.user.role}</TableCell>
                   <TableCell>
                     <Tooltip title="Редактирование">
                       <button className={styles.iconButton}>
@@ -188,6 +184,11 @@ const Cards = () => {
                         onClick={() => handleNavigate(estate.id)}
                       >
                         <ArrowForwardOutlinedIcon />
+                      </button>
+                    </Tooltip>
+                    <Tooltip title="Поменять статус">
+                      <button className={styles.iconButton}>
+                        <BookmarkAddedOutlinedIcon />
                       </button>
                     </Tooltip>
                   </TableCell>
@@ -260,4 +261,4 @@ const Cards = () => {
   );
 };
 
-export default Cards;
+export default TableSales;

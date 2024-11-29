@@ -1,9 +1,5 @@
 import React, { useState } from "react";
 import {
-  useDeleteRealEstateMutation,
-  useGetRealEstatesQuery,
-} from "../../../../store/services/RealEstateApi";
-import {
   Table,
   TableBody,
   TableCell,
@@ -24,16 +20,20 @@ import {
   Alert, // Добавляем Snackbar
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import styles from "./cards.module.scss";
+import styles from "./styles.module.scss";
 import { Edit, Delete } from "@mui/icons-material";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import dayjs from "dayjs";
-import Loader from "../../../Ui/Loader/Loader";
 import { useNavigate } from "react-router-dom";
+import {
+  useDeleteUsersMutation,
+  useGetUsersQuery,
+} from "../../../../../store/services/UserApi";
+import Loader from "../../../../Ui/Loader/Loader";
 
-const Cards = () => {
-  const { data: estates, error, isLoading, refetch } = useGetRealEstatesQuery();
-  const [deleteRealEstate] = useDeleteRealEstateMutation();
+const TableUsers = () => {
+  const { data: users, error, isLoading, refetch } = useGetUsersQuery();
+  const [deleteUsers] = useDeleteUsersMutation();
   const [open, setOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState();
   const [openDialog, setOpenDialog] = useState(false);
@@ -71,13 +71,13 @@ const Cards = () => {
   const handleDeleteConfirm = async () => {
     if (selectedEstateId) {
       try {
-        await deleteRealEstate(selectedEstateId).unwrap();
-        console.log(`Недвижимость с ID ${selectedEstateId} удалена.`);
-        showSnackbar("Недвижимость удалена успешно!", "success");
+        await deleteUsers(selectedEstateId).unwrap();
+        console.log(`Пользователь с ID ${selectedEstateId} удалена.`);
+        showSnackbar("Пользователь успешно удален!", "success");
         refetch();
       } catch (err) {
-        console.error("Ошибка при удалении недвижимости:", err);
-        showSnackbar("Ошибка при удалении недвижимости!", "error"); // Показать Snackbar при ошибке
+        console.error("Ошибка при удалении пользователя:", err);
+        showSnackbar("Ошибка при удалении пользователя!", "error"); // Показать Snackbar при ошибке
       } finally {
         setOpenDialog(false);
         setSelectedEstateId(null);
@@ -85,9 +85,9 @@ const Cards = () => {
     }
   };
 
-  const handleNavigate = (id) => {
-    navigate(`/real-estate/${id}`);
-  };
+  // const handleNavigate = (id) => {
+  //   navigate(`/real-user/${id}`);
+  // };
 
   if (error) {
     return (
@@ -123,51 +123,43 @@ const Cards = () => {
               <TableCell>№</TableCell>
               <TableCell>Дата</TableCell>
               <TableCell>Фото</TableCell>
-              <TableCell>Название ЖК</TableCell>
-              <TableCell>Описание</TableCell>
-              <TableCell>Адрес</TableCell>
-              <TableCell>Строительная компания</TableCell>
-              <TableCell>Цена</TableCell>
-              <TableCell
-                sx={{
-                  // display: "flex",
-                  // justifyContent: "center",
-                  // alignItems: "center",
-                  // gap: "10px",
-                  // textAlign: "center",
-                  paddingLeft: "40px !important",
-                  // bgcolor: "black",
-                }}
-              >
-                Действия
-              </TableCell>
+              <TableCell>Логин</TableCell>
+              {/* <TableCell>Пароль</TableCell> */}
+              <TableCell>ФИО</TableCell>
+              <TableCell>Роль</TableCell>
+              <TableCell>Опыт работы</TableCell>
+              <TableCell>Кол-во продаж</TableCell>
+              <TableCell>Адрес проживания</TableCell>
+              <TableCell>Действия</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {Array.isArray(estates) &&
-              estates.map((estate, index) => (
-                <TableRow key={estate.id}>
+            {Array.isArray(users) &&
+              users.map((user, index) => (
+                <TableRow key={user.id}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>
-                    {dayjs(estate.created_at).format("DD.MM.YYYY")}
+                    {dayjs(user.created_at).format("DD.MM.YYYY")}
                   </TableCell>
                   <TableCell>
                     <Avatar
                       alt="Недвижка"
-                      src="https://ned.kg//storage/12839/63722748b4d5b_F65B61C5-E333-4C35-8A17-8648DA0E73E5-1.jpeg"
+                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjes9As0KBB_ufe_alnSpFsvwJLQFkrZws7g&s"
                       onClick={() =>
                         handleImageClick(
-                          "https://ned.kg//storage/12839/63722748b4d5b_F65B61C5-E333-4C35-8A17-8648DA0E73E5-1.jpeg"
+                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjes9As0KBB_ufe_alnSpFsvwJLQFkrZws7g&s"
                         )
                       }
                       style={{ cursor: "pointer" }}
                     />
                   </TableCell>
-                  <TableCell>{estate.residentialComplexName}</TableCell>
-                  <TableCell>{estate.description}</TableCell>
-                  <TableCell>{estate.exactAddress}</TableCell>
-                  <TableCell>{estate.buildingCompanyName}</TableCell>
-                  <TableCell>{estate.priceVisible}</TableCell>
+                  <TableCell>{user.username}</TableCell>
+                  {/* <TableCell>{user.password}</TableCell> */}
+                  <TableCell>{user.fullName}</TableCell>
+                  <TableCell>{user.role}</TableCell>
+                  <TableCell>{user.experience}</TableCell>
+                  <TableCell>{user.salesCount}</TableCell>
+                  <TableCell>{user.address}</TableCell>
                   <TableCell>
                     <Tooltip title="Редактирование">
                       <button className={styles.iconButton}>
@@ -177,7 +169,7 @@ const Cards = () => {
                     <Tooltip title="Удалить">
                       <button
                         className={styles.iconButton}
-                        onClick={() => handleDeleteClick(estate.id)}
+                        onClick={() => handleDeleteClick(user.id)}
                       >
                         <Delete />
                       </button>
@@ -185,7 +177,7 @@ const Cards = () => {
                     <Tooltip title="Подробнее">
                       <button
                         className={styles.iconButton}
-                        onClick={() => handleNavigate(estate.id)}
+                        onClick={() => handleNavigate(user.id)}
                       >
                         <ArrowForwardOutlinedIcon />
                       </button>
@@ -260,4 +252,4 @@ const Cards = () => {
   );
 };
 
-export default Cards;
+export default TableUsers;
