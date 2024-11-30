@@ -1,3 +1,10 @@
+.add_search_wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
 .wrapper {
   margin-top: 20px;
   // padding: 20px;
@@ -5,7 +12,20 @@
   .table {
     width: 100%;
     border-radius: 20px !important;
+    table-layout: fixed;
+
+    .table_head {
+      // background: #f8f8f8;
+
+
+      .table_head_title {
+        // color: #000;
+      }
+    }
   }
+
+
+  
 
   .iconButton {
     background: none;

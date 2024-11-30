@@ -9,6 +9,7 @@ import Layout from "./common/layout/Layout";
 import AboutPage from "./pages/about";
 import ProtectedRoute from "./common/components/ProtectedRoute";
 import RealEstateDetailPage from "./pages/realEstateDetail";
+import DetailUserPage from "./pages/detailUser";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/real-estate" element={<RealEstatePage />} />
           <Route path="/real-estate/:id" element={<RealEstateDetailPage />} />
           <Route path="/users" element={<UsersPage />} />
+          <Route path="/users/:id" element={<DetailUserPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/about-company" element={<AboutPage />} />
           {/* </Route> */}

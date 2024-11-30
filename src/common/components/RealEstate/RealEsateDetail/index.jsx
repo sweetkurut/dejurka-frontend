@@ -65,12 +65,13 @@ const RealEstateDetail = () => {
                 height: "300px",
                 borderRadius: "10px",
                 overflow: "hidden",
+                width: "20%",
               }}
             >
               {photos.map((photo, index) => (
                 <SwiperSlide key={index}>
                   <img
-                    src="https://ned.kg//storage/12839/63722748b4d5b_F65B61C5-E333-4C35-8A17-8648DA0E73E5-1.jpeg"
+                    // src="https://ned.kg//storage/12839/63722748b4d5b_F65B61C5-E333-4C35-8A17-8648DA0E73E5-1.jpeg"
                     alt={`Фото ${index + 1}`}
                     className="slider-image"
                   />
@@ -127,7 +128,7 @@ const RealEstateDetail = () => {
             </p>
           </div>
           <p className="date">
-            Создано:{" "}
+            Создано:
             {created_at
               ? new Date(created_at).toLocaleDateString("ru-RU")
               : "Дата не указана"}

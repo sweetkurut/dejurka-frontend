@@ -30,6 +30,52 @@ import {
   useGetUsersQuery,
 } from "../../../../../store/services/UserApi";
 import Loader from "../../../../Ui/Loader/Loader";
+import SearchIcon from "@mui/icons-material/Search";
+import { styled, alpha } from "@mui/material/styles";
+import InputBase from "@mui/material/InputBase";
+import AddUser from "../addUser";
+
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginRight: theme.spacing(2),
+  marginLeft: 0,
+  width: "100%",
+  [theme.breakpoints.up("sm")]: {
+    marginLeft: theme.spacing(3),
+    width: "auto",
+  },
+}));
+
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "inherit",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("md")]: {
+      width: "40ch",
+    },
+    borderRadius: "10px",
+    border: "1px solid #ccc",
+  },
+}));
 
 const TableUsers = () => {
   const { data: users, error, isLoading, refetch } = useGetUsersQuery();
@@ -77,7 +123,7 @@ const TableUsers = () => {
         refetch();
       } catch (err) {
         console.error("Ошибка при удалении пользователя:", err);
-        showSnackbar("Ошибка при удалении пользователя!", "error"); // Показать Snackbar при ошибке
+        showSnackbar("Ошибка при удалении пользователя!", "error");
       } finally {
         setOpenDialog(false);
         setSelectedEstateId(null);
@@ -85,9 +131,9 @@ const TableUsers = () => {
     }
   };
 
-  // const handleNavigate = (id) => {
-  //   navigate(`/real-user/${id}`);
-  // };
+  const handleNavigate = (id) => {
+    navigate(`/users/${id}`);
+  };
 
   if (error) {
     return (
@@ -109,6 +155,18 @@ const TableUsers = () => {
 
   return (
     <>
+      <div className={styles.add_search_wrapper}>
+        <AddUser />
+        <Search>
+          <SearchIconWrapper>
+            <SearchIcon />
+          </SearchIconWrapper>
+          <StyledInputBase
+            placeholder="Поиск пользователей"
+            inputProps={{ "aria-label": "search" }}
+          />
+        </Search>
+      </div>
       <TableContainer
         component={Paper}
         className={styles.wrapper}
@@ -118,19 +176,20 @@ const TableUsers = () => {
         }}
       >
         <Table className={styles.table}>
-          <TableHead>
+          <TableHead className={styles.table_head}>
             <TableRow>
-              <TableCell>№</TableCell>
-              <TableCell>Дата</TableCell>
-              <TableCell>Фото</TableCell>
-              <TableCell>Логин</TableCell>
-              {/* <TableCell>Пароль</TableCell> */}
-              <TableCell>ФИО</TableCell>
-              <TableCell>Роль</TableCell>
-              <TableCell>Опыт работы</TableCell>
+              <TableCell className={styles.table_head_title}>№</TableCell>
+              <TableCell className={styles.table_head_title}>Дата</TableCell>
+              <TableCell className={styles.table_head_title}>Фото</TableCell>
+              <TableCell className={styles.table_head_title}>Логин</TableCell>
+              <TableCell className={styles.table_head_title}>ФИО</TableCell>
+              <TableCell className={styles.table_head_title}>Роль</TableCell>
+              {/* <TableCell>Опыт работы</TableCell>
               <TableCell>Кол-во продаж</TableCell>
-              <TableCell>Адрес проживания</TableCell>
-              <TableCell>Действия</TableCell>
+              <TableCell>Адрес проживания</TableCell> */}
+              <TableCell className={styles.table_head_title}>
+                Действия
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -157,9 +216,9 @@ const TableUsers = () => {
                   {/* <TableCell>{user.password}</TableCell> */}
                   <TableCell>{user.fullName}</TableCell>
                   <TableCell>{user.role}</TableCell>
-                  <TableCell>{user.experience}</TableCell>
+                  {/* <TableCell>{user.experience}</TableCell>
                   <TableCell>{user.salesCount}</TableCell>
-                  <TableCell>{user.address}</TableCell>
+                  <TableCell>{user.address}</TableCell> */}
                   <TableCell>
                     <Tooltip title="Редактирование">
                       <button className={styles.iconButton}>
