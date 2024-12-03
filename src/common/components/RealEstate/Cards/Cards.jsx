@@ -43,6 +43,8 @@ const Cards = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const navigate = useNavigate();
 
+  const BASE_URL = "http://localhost:8000";
+
   const showSnackbar = (message, severity) => {
     setSnackbarMessage(message);
     setSnackbarSeverity(severity);
@@ -107,6 +109,8 @@ const Cards = () => {
     );
   }
 
+  console.log(estates, "данные из бэкенда");
+
   return (
     <>
       <TableContainer
@@ -145,54 +149,61 @@ const Cards = () => {
           </TableHead>
           <TableBody>
             {Array.isArray(estates) &&
-              estates.map((estate, index) => (
-                <TableRow key={estate.id}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>
-                    {dayjs(estate.created_at).format("DD.MM.YYYY")}
-                  </TableCell>
-                  <TableCell>
-                    <Avatar
-                      alt="Недвижка"
-                      src="https://ned.kg//storage/12839/63722748b4d5b_F65B61C5-E333-4C35-8A17-8648DA0E73E5-1.jpeg"
-                      onClick={() =>
-                        handleImageClick(
-                          "https://ned.kg//storage/12839/63722748b4d5b_F65B61C5-E333-4C35-8A17-8648DA0E73E5-1.jpeg"
-                        )
-                      }
-                      style={{ cursor: "pointer" }}
-                    />
-                  </TableCell>
-                  <TableCell>{estate.residentialComplexName}</TableCell>
-                  <TableCell>{estate.description}</TableCell>
-                  <TableCell>{estate.exactAddress}</TableCell>
-                  <TableCell>{estate.buildingCompanyName}</TableCell>
-                  <TableCell>{estate.priceVisible}</TableCell>
-                  <TableCell>
-                    <Tooltip title="Редактирование">
-                      <button className={styles.iconButton}>
-                        <Edit />
-                      </button>
-                    </Tooltip>
-                    <Tooltip title="Удалить">
-                      <button
-                        className={styles.iconButton}
-                        onClick={() => handleDeleteClick(estate.id)}
-                      >
-                        <Delete />
-                      </button>
-                    </Tooltip>
-                    <Tooltip title="Подробнее">
-                      <button
-                        className={styles.iconButton}
-                        onClick={() => handleNavigate(estate.id)}
-                      >
-                        <ArrowForwardOutlinedIcon />
-                      </button>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              ))}
+              estates.map((estate, index) => {
+                // Берем первое изображение из массива photos и добавляем BASE_URL
+                const imageUrl = estate.photos?.[1]
+                  ? `${BASE_URL}${estate.photos[1]}`
+                  : null;
+
+                return (
+                  <TableRow key={estate.id}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>
+                      {dayjs(estate.created_at).format("DD.MM.YYYY")}
+                    </TableCell>
+                    <TableCell>
+                      {imageUrl ? (
+                        <Avatar
+                          alt="Недвижка"
+                          src={imageUrl}
+                          onClick={() => handleImageClick(imageUrl)}
+                          style={{ cursor: "pointer" }}
+                        />
+                      ) : (
+                        "Нет изображения"
+                      )}
+                    </TableCell>
+                    <TableCell>{estate.residentialComplexName}</TableCell>
+                    <TableCell>{estate.description}</TableCell>
+                    <TableCell>{estate.exactAddress}</TableCell>
+                    <TableCell>{estate.buildingCompanyName}</TableCell>
+                    <TableCell>{estate.priceVisible}</TableCell>
+                    <TableCell>
+                      <Tooltip title="Редактирование">
+                        <button className={styles.iconButton}>
+                          <Edit />
+                        </button>
+                      </Tooltip>
+                      <Tooltip title="Удалить">
+                        <button
+                          className={styles.iconButton}
+                          onClick={() => handleDeleteClick(estate.id)}
+                        >
+                          <Delete />
+                        </button>
+                      </Tooltip>
+                      <Tooltip title="Подробнее">
+                        <button
+                          className={styles.iconButton}
+                          onClick={() => handleNavigate(estate.id)}
+                        >
+                          <ArrowForwardOutlinedIcon />
+                        </button>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </TableContainer>

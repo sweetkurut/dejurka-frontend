@@ -1,12 +1,26 @@
 import { useState } from "react";
 import styles from "./style.module.scss";
 import { Drawer, TextField } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { Delete } from "@mui/icons-material";
 
 const AddEstates = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  const handleFileChange = (event) => {
+    const files = event.target.files;
+    if (files) {
+      setSelectedFiles((prev) => [...prev, ...Array.from(files)]);
+    }
+  };
+
+  const handleFileRemove = (index) => {
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const toggleDrawer = (open) => {
     setIsDrawerOpen(open);
@@ -28,6 +42,38 @@ const AddEstates = () => {
           <h3 className={styles.form_title}>Добавление недвижимости</h3>
           <form className={styles.form}>
             <div className={styles.form_group_wrapper}>
+              <div className={styles.file_wrap}>
+                <label className={styles.file_label}>
+                  <input
+                    type="file"
+                    className={styles.input_file}
+                    accept="image/*"
+                    multiple
+                    onChange={handleFileChange}
+                  />
+                  Выберите файл
+                </label>
+                {selectedFiles.length > 0 && (
+                  <div className={styles.preview_container}>
+                    {selectedFiles.map((file, index) => (
+                      <div key={index} className={styles.preview_item}>
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt={`Файл ${index + 1}`}
+                          className={styles.preview_image}
+                        />
+                        <IconButton
+                          className={styles.delete_icon}
+                          onClick={() => handleFileRemove(index)}
+                        >
+                          <Delete />
+                        </IconButton>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               <div className={styles.form_group}>
                 <TextField
                   sx={{
