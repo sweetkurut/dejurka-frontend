@@ -9,17 +9,19 @@
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .real-estate-slider {
   margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .slider-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; /* Центрирование и обрезка */
   border-radius: 10px;
 }
 
@@ -28,12 +30,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  // background-color: #f9f9f9;
   border: solid 1px #f9f9f9;
   border-radius: 10px;
   font-size: 16px;
   color: #888;
-  width: 650px;
+  width: 700px; /* Увеличено */
+}
+
+.swiper-container {
+  max-width: 800px; /* Ограничение ширины слайдера */
+  aspect-ratio: 16 / 9; /* Соотношение сторон */
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .real-estate-info h1 {

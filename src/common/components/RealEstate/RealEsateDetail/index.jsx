@@ -13,6 +13,8 @@ import Loader from "../../../Ui/Loader/Loader";
 const RealEstateDetail = () => {
   const { id } = useParams();
 
+  const BASE_URL = "http://localhost:8000";
+
   const {
     data: getRealEstateDetail,
     error,
@@ -49,12 +51,16 @@ const RealEstateDetail = () => {
     created_at,
   } = getRealEstateDetail;
 
+  const photoUrls = Array.isArray(photos)
+    ? photos.map((photo) => `${BASE_URL}${photo}`)
+    : [];
+
   return (
     <div className="container">
       <div className="real-estate-detail">
         {/* Слайдер фотографий */}
         <div className="real-estate-slider">
-          {Array.isArray(photos) && photos.length > 0 ? (
+          {photoUrls.length > 0 ? (
             <Swiper
               modules={[Navigation, Pagination]}
               navigation
@@ -65,13 +71,14 @@ const RealEstateDetail = () => {
                 height: "300px",
                 borderRadius: "10px",
                 overflow: "hidden",
-                width: "20%",
+                objectFit: "cover",
+                width: "600px",
               }}
             >
-              {photos.map((photo, index) => (
+              {photoUrls.map((photo, index) => (
                 <SwiperSlide key={index}>
                   <img
-                    // src="https://ned.kg//storage/12839/63722748b4d5b_F65B61C5-E333-4C35-8A17-8648DA0E73E5-1.jpeg"
+                    src={photo}
                     alt={`Фото ${index + 1}`}
                     className="slider-image"
                   />

@@ -28,7 +28,15 @@ export const realEstateApi = createApi({
     getRealEstateDetail: builder.query({
       query: (id) => `real-estate/${id}`,
     }),
+
+    createRealEstata : builder.mutation({
+      query: (realEstateData) => ({
+        url: "real-estate",
+        method: "POST",
+        body: realEstateData,
+      }),
+    }),
   }),
 });
 
-export const { useGetRealEstatesQuery, useDeleteRealEstateMutation, useGetRealEstateDetailQuery } = realEstateApi;
+export const { useGetRealEstatesQuery, useDeleteRealEstateMutation, useGetRealEstateDetailQuery, useCreateRealEstataMutation } = realEstateApi;
