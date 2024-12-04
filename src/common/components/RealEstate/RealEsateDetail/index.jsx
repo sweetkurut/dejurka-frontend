@@ -130,7 +130,7 @@ const RealEstateDetail = () => {
             <p>
               <strong>Ремонт:</strong> {renovation || "Не указано"}
             </p>
-            <p>
+            <p className="decsription">
               <strong>Описание:</strong> {description || "Нет описания"}
             </p>
           </div>

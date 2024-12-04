@@ -174,7 +174,9 @@ const Cards = () => {
                       )}
                     </TableCell>
                     <TableCell>{estate.residentialComplexName}</TableCell>
-                    <TableCell>{estate.description}</TableCell>
+                    <TableCell className={styles.description2}>
+                      {estate.description}
+                    </TableCell>
                     <TableCell>{estate.exactAddress}</TableCell>
                     <TableCell>{estate.buildingCompanyName}</TableCell>
                     <TableCell>{estate.priceVisible}</TableCell>

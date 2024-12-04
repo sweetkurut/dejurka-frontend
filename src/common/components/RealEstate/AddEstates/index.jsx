@@ -3,6 +3,7 @@ import styles from "./style.module.scss";
 import { Drawer, TextField } from "@mui/material";
 import { IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
+import { useCreateRealEstataMutation } from "../../../../store/services/RealEstateApi";
 
 const AddEstates = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -10,6 +11,8 @@ const AddEstates = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  const [createRealEstata] = useCreateRealEstataMutation();
 
   const handleFileChange = (event) => {
     const files = event.target.files;
@@ -111,7 +114,7 @@ const AddEstates = () => {
                   fullWidth
                   type="text"
                   id="title"
-                  label="Секция"
+                  label="Серия"
                 />
                 <TextField
                   sx={{
